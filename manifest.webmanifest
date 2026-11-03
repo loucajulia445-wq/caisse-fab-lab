@@ -1,0 +1,19 @@
+{
+  "name": "Systeme caisse",
+  "short_name": "Systeme caisse",
+  "description": "Caisse et gestion de stock de votre boutique",
+  "lang": "fr-FR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f9f5",
+  "theme_color": "#176b4a",
+  "icons": [
+    {
+      "src": "./app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
