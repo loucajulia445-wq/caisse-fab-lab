@@ -7,12 +7,11 @@ reste en mode local, avec des données séparées par navigateur.
 
 ## 1. Créer la base de données
 
-1. Créez un projet sur Supabase.
+1. Le projet de cette caisse est `tqzgylltwefqusbbjovj.supabase.co`.
 2. Dans **SQL Editor**, exécutez le contenu de `supabase/setup.sql`. Cette
    opération crée les tables privées, le code PIN initial `1234` et la
    protection contre les tentatives de connexion répétées.
-3. Dans les paramètres API du projet, copiez l’URL du projet et la clé
-   **publishable** (ou `anon`).
+   Si ce script a déjà été exécuté sur le projet, ne le relancez pas.
 
 ## 2. Déployer l’API sécurisée
 
@@ -21,7 +20,7 @@ exécutez :
 
 ```text
 supabase login
-supabase link --project-ref VOTRE_REFERENCE_PROJET
+supabase link --project-ref tqzgylltwefqusbbjovj
 supabase functions deploy caisse
 ```
 
@@ -30,18 +29,11 @@ copiez jamais dans `index.html`, `supabase-config.js` ou un message.
 
 ## 3. Connecter l’application au projet
 
-Dans `supabase-config.js`, remplacez les deux chaînes vides par l’URL et la clé
-publishable (ou `anon`) de votre projet :
+L’URL et la clé publishable du projet sont déjà renseignées dans
+`supabase-config.js`. Après le déploiement de la fonction, republiez ce fichier
+avec `index.html` sur votre hébergement HTTPS.
 
-```js
-window.CAISSE_CONFIG = {
-  supabaseUrl: "https://VOTRE_REFERENCE_PROJET.supabase.co",
-  supabaseAnonKey: "VOTRE_CLE_PUBLISHABLE"
-};
-```
-
-Publiez `index.html`, `supabase-config.js` et les autres fichiers de
-l’application sur un hébergement HTTPS. Le dossier `supabase/` sert au
+Le dossier `supabase/` sert au
 déploiement de la fonction et n’a pas à être publié comme site web.
 
 ## 4. Première connexion

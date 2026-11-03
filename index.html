@@ -481,7 +481,7 @@
         unlockCashier($("#login-pin").value);
       });
       $("#login-status").textContent = cloudEnabled
-        ? "Connexion protégée · stock et ventes partagés entre vos appareils."
+        ? "Paramètres Supabase enregistrés. Déployez la base et la fonction serveur pour activer le partage."
         : "Mode local : stock et ventes ne sont pas synchronisés. Configurez Supabase pour partager la caisse.";
       $("#login-status").className = `login-status ${cloudEnabled ? "cloud" : "local"}`;
       $("#pin-mode-note").textContent = cloudEnabled
