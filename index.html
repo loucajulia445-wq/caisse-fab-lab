@@ -25,7 +25,8 @@
     @media(max-width:980px) and (min-width:801px){.pos-layout{grid-template-columns:minmax(0,1fr)}.ticket{position:static}.ticket-items{max-height:300px}.product-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr))}}
     @media(max-width:800px){.app{display:block;padding-bottom:66px}.sidebar{position:fixed;z-index:4;bottom:0;top:auto;height:64px;min-height:0;width:100%;padding:5px 8px env(safe-area-inset-bottom);display:block}.brand,.nav-label,.side-bottom{display:none}.nav{height:100%;display:flex;justify-content:space-around;gap:3px}.nav button{flex:1;justify-content:center;flex-direction:column;gap:2px;padding:4px 2px;font-size:10px}.nav .icon{font-size:18px}.pos-layout{grid-template-columns:1fr}.ticket{position:static;order:2}.ticket-items{max-height:240px}.stats{grid-template-columns:repeat(2,1fr)}main{padding:20px 15px 25px}.page-title{font-size:26px}.date-pill{display:none}.app.sidebar-collapsed{padding-bottom:50px}.app.sidebar-collapsed .sidebar{height:48px;padding:3px 8px env(safe-area-inset-bottom)}.app.sidebar-collapsed .nav button{font-size:0}.app.sidebar-collapsed .nav .icon{font-size:18px}.topbar-left{gap:8px}.menu-toggle{width:34px;height:34px}}
     @media(max-width:430px){.toolbar{flex-direction:column}.category-filter{padding:11px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-photo{height:112px}.product-card{border-radius:11px}.top-actions .primary{padding:10px;font-size:12px}.stats{gap:8px}.stat{padding:12px}.stat-value{font-size:21px}.settings-panel{padding:17px}.settings-fields{grid-template-columns:1fr;gap:13px}.settings-footer{align-items:flex-start;flex-direction:column}.settings-intro h2{font-size:21px}.settings-section-head{align-items:flex-start;flex-direction:column}.pin-fields{grid-template-columns:1fr}.login-card{padding:25px 20px}.top-actions{gap:6px}.topbar{align-items:flex-start}.topbar-left{min-width:0}.page-title{font-size:23px}}
-    @media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{position:absolute;inset:0;width:100%;padding:20px}}
+    @page{margin:0}
+    @media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{position:absolute;inset:0;width:100%;padding:2mm;background:#fff}.receipt-doc{width:calc(var(--receipt-width, 80mm) - 4mm);max-width:none;margin:0 auto;padding:0 2mm}}
   </style>
   <style>
     @media(min-width:801px){.app.sidebar-collapsed{grid-template-columns:72px minmax(0,1fr)}.app.sidebar-collapsed .sidebar{padding-left:9px;padding-right:9px}}
@@ -88,6 +89,7 @@
     .ticket-summary span,.ticket-summary strong{display:block}
     .ticket-summary span{font-size:9px;color:var(--muted)}
     .ticket-summary strong{margin-top:4px;color:var(--green);font-size:12px}
+    .vat-summary{display:flex;justify-content:space-between;margin-top:-3px;color:var(--muted);font-size:11px}
     .ticket .total{padding:13px 0;border-top:1px dashed var(--line)}
     .ticket .small-note{line-height:1.55}
     .receipt-doc{max-width:390px;margin:0 auto;padding:12px 4px;color:#1d2738;font:13px/1.5 Arial,sans-serif}
@@ -155,19 +157,19 @@
           <aside class="ticket" aria-label="Ticket en cours">
             <div class="ticket-head"><div class="ticket-brand"><img class="ticket-logo" src="./receipt-logo.png" alt="Logo du FABLAB"><div class="ticket-brand-copy"><strong>Collège Romain Blache</strong><span>FABLAB · Saint-Cyr-sur-Mer</span></div></div><div class="ticket-details"><h2>Ticket en cours</h2><span class="ticket-label" id="ticket-number">N° 001</span></div><div class="ticket-meta" id="ticket-date"></div></div>
             <div class="ticket-items" id="ticket-items"></div>
-            <div class="ticket-bottom"><div class="ticket-summary"><div><span>Articles</span><strong id="ticket-count">0 article</strong></div><div><span>Paiement</span><strong id="ticket-payment">Espèces</strong></div></div><div class="subtotal"><span>Sous-total</span><span id="subtotal">0,00 €</span></div><div class="total"><span>Total à payer</span><strong id="total">0,00 €</strong></div><div class="ticket-actions"><button class="primary" id="checkout-button">Encaisser</button><button class="secondary" id="print-button">⎙ Imprimer</button><button class="secondary clear-button" id="clear-ticket">Vider le ticket</button></div><div class="small-note">Le stock est mis à jour après encaissement</div></div>
+            <div class="ticket-bottom"><div class="ticket-summary"><div><span>Articles</span><strong id="ticket-count">0 article</strong></div><div><span>Paiement</span><strong id="ticket-payment">Espèces</strong></div></div><div class="subtotal"><span>Sous-total TTC</span><span id="subtotal">0,00 €</span></div><div class="vat-summary"><span>Dont TVA</span><span id="ticket-vat">0,00 €</span></div><div class="total"><span>Total à payer</span><strong id="total">0,00 €</strong></div><div class="ticket-actions"><button class="primary" id="checkout-button">Encaisser</button><button class="secondary" id="print-button">⎙ Imprimer</button><button class="secondary clear-button" id="clear-ticket">Vider le ticket</button></div><div class="small-note">Le stock est mis à jour après encaissement</div></div>
           </aside>
         </div>
       </section>
       <section class="view" id="view-produits">
         <div class="stats" id="inventory-stats"></div>
         <div class="section-head"><h2>Votre catalogue</h2><button class="primary" id="add-product">＋ Ajouter un produit</button></div>
-        <div class="panel table-wrap"><table><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock · ajouter</th><th>État</th><th>Actions</th></tr></thead><tbody id="product-table"></tbody></table></div>
+        <div class="panel table-wrap"><table><thead><tr><th>Produit</th><th>Catégorie</th><th>Prix TTC</th><th>TVA</th><th>Stock · ajouter</th><th>État</th><th>Actions</th></tr></thead><tbody id="product-table"></tbody></table></div>
       </section>
       <section class="view" id="view-ventes">
         <div class="stats" id="sales-stats"></div>
         <div class="section-head"><h2>Dernières ventes</h2><button class="secondary" id="export-sales">↓ Exporter CSV</button></div>
-        <div class="panel table-wrap"><table><thead><tr><th>Ticket</th><th>Date & heure</th><th>Articles</th><th>Paiement</th><th>Total</th><th>Actions</th></tr></thead><tbody id="sales-table"></tbody></table><div class="sales-empty hidden" id="sales-empty">Aucune vente pour le moment. Votre première vente apparaîtra ici.</div></div>
+        <div class="panel table-wrap"><table><thead><tr><th>Ticket</th><th>Date & heure</th><th>Articles</th><th>Paiement</th><th>Total TTC</th><th>TVA</th><th>Actions</th></tr></thead><tbody id="sales-table"></tbody></table><div class="sales-empty hidden" id="sales-empty">Aucune vente pour le moment. Votre première vente apparaîtra ici.</div></div>
       </section>
       <section class="view" id="view-parametres">
         <div class="settings-intro"><span class="settings-icon">✦</span><div><h2>Personnalisez votre boutique</h2><p>Ces informations apparaîtront sur votre écran de caisse et vos reçus clients.</p></div></div>
@@ -184,6 +186,14 @@
           <div class="settings-footer"><span>Les informations sont enregistrées sur cet appareil.</span><button class="primary" type="submit">Enregistrer les modifications</button></div>
           <div class="pin-panel"><h3>Code PIN de connexion</h3><p>Modifiez le code utilisé pour ouvrir la caisse sur vos appareils. Choisissez un code difficile à deviner.</p><div class="pin-fields"><div class="field"><label for="current-pin">Code actuel</label><input id="current-pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8" placeholder="••••"></div><div class="field"><label for="new-pin">Nouveau code (4 à 8 chiffres)</label><input id="new-pin" type="password" inputmode="numeric" autocomplete="new-password" pattern="[0-9]{4,8}" maxlength="8" placeholder="Au moins 4 chiffres"></div><div class="field"><label for="confirm-pin">Confirmer le nouveau code</label><input id="confirm-pin" type="password" inputmode="numeric" autocomplete="new-password" pattern="[0-9]{4,8}" maxlength="8" placeholder="Répétez le code"></div></div><div class="settings-footer"><span id="pin-mode-note">Le code est enregistré sur cet appareil.</span><button class="secondary" type="button" id="change-pin-button">Modifier le code PIN</button></div></div>
         </form>
+        <section class="settings-panel printer-panel" aria-labelledby="printer-settings-title">
+          <div class="settings-section-head"><div><h3 id="printer-settings-title">Imprimante de tickets</h3><p>Connexion USB avec le pilote de votre ordinateur</p></div><span class="settings-badge">TOUTES MARQUES</span></div>
+          <p>Branchez l’imprimante en USB et installez son pilote dans Windows. La caisse passe par la fenêtre d’impression du navigateur : choisissez-y votre imprimante, sans dépendre de sa marque. L’accès direct à l’USB n’est pas disponible de façon universelle dans un navigateur.</p>
+          <div class="settings-fields">
+            <div class="field"><label for="printer-width">Largeur du rouleau</label><select id="printer-width"><option value="58">58 mm</option><option value="80">80 mm</option></select></div>
+          </div>
+          <div class="settings-footer"><span>Choisissez le même format dans les préférences du pilote.</span><button class="secondary" type="button" id="printer-test-button">Imprimer un ticket de test</button></div>
+        </section>
       </section>
     </main>
   </div>
@@ -192,7 +202,8 @@
       <div class="modal-body"><input type="hidden" id="edit-id"><div class="form-grid">
         <div class="field full"><label for="p-name">Nom du produit *</label><input id="p-name" required maxlength="70" placeholder="Ex. Boule de Noël dorée"></div>
         <div class="field"><label for="p-category">Catégorie</label><input id="p-category" list="category-list" maxlength="35" placeholder="Décoration"><datalist id="category-list"></datalist></div>
-        <div class="field"><label for="p-price">Prix de vente (€) *</label><input id="p-price" type="number" min="0.01" step="0.01" required placeholder="12,50"></div>
+        <div class="field"><label for="p-price">Prix de vente TTC (€) *</label><input id="p-price" type="number" min="0.01" step="0.01" required placeholder="12,50"></div>
+        <div class="field"><label for="p-vat-rate">Taux de TVA</label><select id="p-vat-rate"><option value="20">20 %</option><option value="10">10 %</option><option value="5.5">5,5 %</option><option value="2.1">2,1 %</option><option value="0">0 %</option></select></div>
         <div class="field"><label for="p-stock">Quantité en stock *</label><input id="p-stock" type="number" min="0" step="1" required placeholder="10"></div>
         <div class="field"><label for="p-alert">Alerte stock bas à</label><input id="p-alert" type="number" min="0" step="1" value="3"></div>
         <div class="field full"><label>Photo du produit</label><div class="photo-upload"><div class="photo-preview" id="photo-preview">🎁</div><input id="p-photo" type="file" accept="image/*"></div></div>
@@ -215,6 +226,23 @@
       "use strict";
       const $ = (selector) => document.querySelector(selector);
       const money = (value) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
+      const vatRates = [20,10,5.5,2.1,0];
+      const vatRate = (item) => item?.vatRate !== undefined && item.vatRate !== null && item.vatRate !== "" && vatRates.includes(Number(item.vatRate)) ? Number(item.vatRate) : 20;
+      const roundMoney = (value) => Math.round((value + Number.EPSILON) * 100) / 100;
+      const vatBreakdown = (items) => {
+        const totals = new Map();
+        items.forEach(item => {
+          const rate = vatRate(item);
+          totals.set(rate,(totals.get(rate) || 0) + item.price * item.qty);
+        });
+        return [...totals].sort(([a],[b]) => b - a).map(([rate,ttc]) => {
+          const totalTtc = roundMoney(ttc);
+          const ht = roundMoney(totalTtc / (1 + rate / 100));
+          return {rate,ht,vat:roundMoney(totalTtc - ht),ttc:totalTtc};
+        });
+      };
+      const vatTotal = (items) => roundMoney(vatBreakdown(items).reduce((sum,group) => sum + group.vat,0));
+      const vatLabel = (rate) => `${Number(rate).toLocaleString("fr-FR")} %`;
       const dateText = (date = new Date()) => new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" }).format(date);
       const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const config = window.CAISSE_CONFIG || {};
@@ -243,6 +271,9 @@
         try { const data = localStorage.getItem(key); return data ? JSON.parse(data) : fallback; }
         catch (error) { console.error(`Impossible de lire ${key} depuis le stockage local.`, error); return fallback; }
       };
+      const savedPrinterWidth = load("atelier-sapin-printer-width", 80);
+      let printerPaperWidth = [58,80].includes(savedPrinterWidth) ? savedPrinterWidth : 80;
+      document.documentElement.style.setProperty("--receipt-width", `${printerPaperWidth}mm`);
       const defaultBusiness = {name:"Caisse FABLAB",tagline:"Collège Romain Blache · Saint-Cyr-sur-Mer",phone:"",address:"",logo:"",icon:"🎄"};
       const savedBusiness = load("atelier-sapin-business", {});
       let business = {...defaultBusiness,...(savedBusiness && typeof savedBusiness === "object" && !Array.isArray(savedBusiness) ? savedBusiness : {})};
@@ -379,8 +410,8 @@
         const count = cart.reduce((total, item) => total + item.qty, 0);
         const amount = cart.reduce((total, item) => total + item.price * item.qty, 0);
         $("#ticket-items").classList.toggle("is-empty",!cart.length);
-        $("#ticket-items").innerHTML = cart.length ? cart.map(item => `<div class="ticket-line"><div><div class="line-title">${escapeHtml(item.name)}</div><div class="line-sub">${money(item.price)} / unité</div><div class="qty-control"><button data-qty="${item.id}" data-change="-1" aria-label="Retirer une unité">−</button><span>${item.qty}</span><button data-qty="${item.id}" data-change="1" aria-label="Ajouter une unité">+</button></div></div><div class="line-right">${money(item.price * item.qty)}<button class="line-remove" data-remove="${item.id}">Retirer</button></div></div>`).join("") : `<div class="empty-ticket"><span>🧾</span><strong>Votre ticket est prêt</strong><small>Choisissez un article dans le catalogue pour commencer la vente. Les quantités et le total s’afficheront ici.</small></div>`;
-        $("#subtotal").textContent = money(amount); $("#total").textContent = money(amount);
+        $("#ticket-items").innerHTML = cart.length ? cart.map(item => `<div class="ticket-line"><div><div class="line-title">${escapeHtml(item.name)}</div><div class="line-sub">${money(item.price)} TTC / unité · TVA ${vatLabel(vatRate(item))}</div><div class="qty-control"><button data-qty="${item.id}" data-change="-1" aria-label="Retirer une unité">−</button><span>${item.qty}</span><button data-qty="${item.id}" data-change="1" aria-label="Ajouter une unité">+</button></div></div><div class="line-right">${money(item.price * item.qty)}<button class="line-remove" data-remove="${item.id}">Retirer</button></div></div>`).join("") : `<div class="empty-ticket"><span>🧾</span><strong>Votre ticket est prêt</strong><small>Choisissez un article dans le catalogue pour commencer la vente. Les quantités et le total s’afficheront ici.</small></div>`;
+        $("#subtotal").textContent = money(amount); $("#ticket-vat").textContent = money(vatTotal(cart)); $("#total").textContent = money(amount);
         $("#ticket-number").textContent = `N° ${String(sales.length + 1).padStart(3,"0")}`;
         $("#ticket-date").textContent = `${dateText()} · ${count} article${count > 1 ? "s" : ""}`;
         $("#ticket-count").textContent = `${count} article${count > 1 ? "s" : ""}`;
@@ -392,7 +423,7 @@
         const stockUnits = products.reduce((sum, product) => sum + product.stock, 0);
         const low = products.filter(product => product.stock <= product.alert).length;
         $("#inventory-stats").innerHTML = `<div class="stat"><div class="stat-label">Références produits</div><div class="stat-value">${products.length}</div><div class="stat-hint">Dans votre catalogue</div></div><div class="stat"><div class="stat-label">Articles en stock</div><div class="stat-value">${stockUnits}</div><div class="stat-hint">Unités disponibles</div></div><div class="stat"><div class="stat-label">Stock bas / épuisé</div><div class="stat-value">${low}</div><div class="stat-hint">À réapprovisionner</div></div><div class="stat"><div class="stat-label">Catégories</div><div class="stat-value">${categories().length}</div><div class="stat-hint">Familles de produits</div></div>`;
-        $("#product-table").innerHTML = products.length ? products.map(product => `<tr><td><div class="table-product"><div class="tiny-photo">${productPhoto(product,"")}</div>${escapeHtml(product.name)}</div></td><td>${escapeHtml(product.category || "Divers")}</td><td>${money(product.price)}</td><td><div class="stock-adjust"><strong>${product.stock}</strong><button class="restock-button" data-restock="${escapeHtml(product.id)}" data-amount="1" title="Ajouter 1 unité à ${escapeHtml(product.name)}">＋1</button><button class="restock-button" data-restock="${escapeHtml(product.id)}" data-amount="5" title="Ajouter 5 unités à ${escapeHtml(product.name)}">＋5</button></div></td><td><span class="badge ${product.stock <= product.alert ? "low" : ""}">${product.stock <= 0 ? "Épuisé" : product.stock <= product.alert ? "Stock bas" : "Disponible"}</span></td><td><button class="icon-btn" data-edit="${escapeHtml(product.id)}" title="Modifier">✎</button><button class="icon-btn" data-delete="${escapeHtml(product.id)}" title="Supprimer">⌫</button></td></tr>`).join("") : `<tr><td colspan="6" class="sales-empty">Aucun produit. Ajoutez votre premier article.</td></tr>`;
+        $("#product-table").innerHTML = products.length ? products.map(product => `<tr><td><div class="table-product"><div class="tiny-photo">${productPhoto(product,"")}</div>${escapeHtml(product.name)}</div></td><td>${escapeHtml(product.category || "Divers")}</td><td>${money(product.price)}</td><td>${vatLabel(vatRate(product))}</td><td><div class="stock-adjust"><strong>${product.stock}</strong><button class="restock-button" data-restock="${escapeHtml(product.id)}" data-amount="1" title="Ajouter 1 unité à ${escapeHtml(product.name)}">＋1</button><button class="restock-button" data-restock="${escapeHtml(product.id)}" data-amount="5" title="Ajouter 5 unités à ${escapeHtml(product.name)}">＋5</button></div></td><td><span class="badge ${product.stock <= product.alert ? "low" : ""}">${product.stock <= 0 ? "Épuisé" : product.stock <= product.alert ? "Stock bas" : "Disponible"}</span></td><td><button class="icon-btn" data-edit="${escapeHtml(product.id)}" title="Modifier">✎</button><button class="icon-btn" data-delete="${escapeHtml(product.id)}" title="Supprimer">⌫</button></td></tr>`).join("") : `<tr><td colspan="7" class="sales-empty">Aucun produit. Ajoutez votre premier article.</td></tr>`;
       };
       const renderSales = () => {
         const today = new Date().toDateString();
@@ -400,7 +431,7 @@
         const revenue = todaysSales.reduce((sum,sale) => sum + sale.total, 0);
         const count = todaysSales.reduce((sum,sale) => sum + sale.items.reduce((n,item) => n + item.qty, 0), 0);
         $("#sales-stats").innerHTML = `<div class="stat"><div class="stat-label">Chiffre d'affaires du jour</div><div class="stat-value">${money(revenue)}</div><div class="stat-hint">${todaysSales.length} ticket${todaysSales.length > 1 ? "s" : ""} encaissé${todaysSales.length > 1 ? "s" : ""}</div></div><div class="stat"><div class="stat-label">Articles vendus aujourd'hui</div><div class="stat-value">${count}</div><div class="stat-hint">Unités vendues</div></div><div class="stat"><div class="stat-label">Ventes enregistrées</div><div class="stat-value">${sales.length}</div><div class="stat-hint">Depuis le début</div></div><div class="stat"><div class="stat-label">Panier moyen du jour</div><div class="stat-value">${todaysSales.length ? money(revenue / todaysSales.length) : money(0)}</div><div class="stat-hint">Par ticket encaissé</div></div>`;
-        $("#sales-table").innerHTML = sales.map(sale => `<tr><td><strong>${escapeHtml(sale.number)}</strong></td><td>${dateText(new Date(sale.date))}</td><td>${sale.items.reduce((sum,item) => sum + item.qty,0)} article${sale.items.reduce((sum,item) => sum + item.qty,0) > 1 ? "s" : ""}</td><td>${escapeHtml(sale.method)}</td><td><strong>${money(sale.total)}</strong></td><td><div class="sales-actions"><button class="secondary" data-receipt="${escapeHtml(sale.id)}">Reçu</button><button class="danger" data-delete-sale="${escapeHtml(sale.id)}" aria-label="Supprimer le ticket ${escapeHtml(sale.number)}">Supprimer</button></div></td></tr>`).join("");
+        $("#sales-table").innerHTML = sales.map(sale => `<tr><td><strong>${escapeHtml(sale.number)}</strong></td><td>${dateText(new Date(sale.date))}</td><td>${sale.items.reduce((sum,item) => sum + item.qty,0)} article${sale.items.reduce((sum,item) => sum + item.qty,0) > 1 ? "s" : ""}</td><td>${escapeHtml(sale.method)}</td><td><strong>${money(sale.total)}</strong></td><td>${sale.vatEnabled ? money(vatTotal(sale.items)) : "—"}</td><td><div class="sales-actions"><button class="secondary" data-receipt="${escapeHtml(sale.id)}">Reçu</button><button class="danger" data-delete-sale="${escapeHtml(sale.id)}" aria-label="Supprimer le ticket ${escapeHtml(sale.number)}">Supprimer</button></div></td></tr>`).join("");
         $("#sales-empty").classList.toggle("hidden", sales.length > 0);
       };
       const renderAll = () => { renderBusiness(); renderCatalog(); renderCart(); renderInventory(); renderSales(); };
@@ -408,7 +439,7 @@
         const product = products.find(item => item.id === id); if (!product) return;
         const cartItem = cart.find(item => item.id === id);
         if ((cartItem?.qty || 0) >= product.stock) { notify("La quantité en stock est insuffisante."); return; }
-        if (cartItem) cartItem.qty++; else cart.push({id:product.id,name:product.name,price:product.price,qty:1});
+        if (cartItem) cartItem.qty++; else cart.push({id:product.id,name:product.name,price:product.price,vatRate:vatRate(product),qty:1});
         renderCart();
       };
       const setView = (name) => {
@@ -426,7 +457,7 @@
         $("#product-form").reset(); $("#edit-id").value = product?.id || ""; photoData = product?.image || "";
         $("#product-modal-title").textContent = product ? "Modifier le produit" : "Ajouter un produit";
         $("#p-name").value = product?.name || ""; $("#p-category").value = product?.category || "";
-        $("#p-price").value = product?.price ?? ""; $("#p-stock").value = product?.stock ?? "";
+        $("#p-price").value = product?.price ?? ""; $("#p-vat-rate").value = String(vatRate(product || {})); $("#p-stock").value = product?.stock ?? "";
         $("#p-alert").value = product?.alert ?? 3; updatePhotoPreview();
         $("#product-modal").classList.add("open"); $("#p-name").focus();
       };
@@ -435,7 +466,11 @@
         const receiptBusiness = sale.business || business;
         const contact = [receiptBusiness.phone,receiptBusiness.address].filter(Boolean).map(escapeHtml);
         const itemCount = sale.items.reduce((count,item) => count + item.qty,0);
-        $("#receipt-content").innerHTML = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="./receipt-logo.png" alt="Logo du FABLAB"><h2 class="receipt-title">${escapeHtml(receiptBusiness.name)}</h2>${receiptBusiness.tagline ? `<p class="receipt-tagline">${escapeHtml(receiptBusiness.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${escapeHtml(sale.number)}</strong></div><div><span>Date</span><strong>${dateText(new Date(sale.date))}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total</span></div>${sale.items.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("")}<section class="receipt-totals"><div class="receipt-total"><span>Sous-total</span><strong>${money(sale.total)}</strong></div><div class="receipt-total final"><span>Total à payer</span><strong>${money(sale.total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(sale.method)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
+        const breakdown = sale.vatEnabled ? vatBreakdown(sale.items) : [];
+        const totalHt = roundMoney(breakdown.reduce((sum,group) => sum + group.ht,0));
+        const totalVat = roundMoney(breakdown.reduce((sum,group) => sum + group.vat,0));
+        const vatRows = sale.vatEnabled ? `${breakdown.map(group => `<div class="receipt-total"><span>Base HT · ${vatLabel(group.rate)}</span><strong>${money(group.ht)}</strong></div><div class="receipt-total"><span>TVA · ${vatLabel(group.rate)}</span><strong>${money(group.vat)}</strong></div>`).join("")}<div class="receipt-total"><span>Total HT</span><strong>${money(totalHt)}</strong></div><div class="receipt-total"><span>Total TVA</span><strong>${money(totalVat)}</strong></div>` : `<div class="receipt-total"><span>Sous-total</span><strong>${money(sale.total)}</strong></div>`;
+        $("#receipt-content").innerHTML = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="./receipt-logo.png" alt="Logo du FABLAB"><h2 class="receipt-title">${escapeHtml(receiptBusiness.name)}</h2>${receiptBusiness.tagline ? `<p class="receipt-tagline">${escapeHtml(receiptBusiness.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${escapeHtml(sale.number)}</strong></div><div><span>Date</span><strong>${dateText(new Date(sale.date))}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total TTC</span></div>${sale.items.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité${sale.vatEnabled ? ` TTC · TVA ${vatLabel(vatRate(item))}` : ""}</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("")}<section class="receipt-totals">${vatRows}<div class="receipt-total final"><span>Total TTC</span><strong>${money(sale.total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(sale.method)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
         $("#sale-modal").classList.add("open");
       };
       const completeSale = async () => {
@@ -446,7 +481,7 @@
           const product = products.find(entry => entry.id === item.id);
           if (!product || product.stock < item.qty) { notify(`Stock insuffisant pour « ${item.name} ».`); return; }
         }
-        const sale = {id:uid(),number:`N° ${String(sales.length + 1).padStart(3,"0")}`,date:new Date().toISOString(),items:cart.map(item=>({...item})),total,method:payMethod,business:{...business}};
+        const sale = {id:uid(),number:`N° ${String(sales.length + 1).padStart(3,"0")}`,date:new Date().toISOString(),items:cart.map(item=>({...item,vatRate:vatRate(item)})),total,method:payMethod,business:{...business},vatEnabled:true};
         const previousProducts = JSON.stringify(products), previousSales = JSON.stringify(sales);
         sale.items.forEach(item => { products.find(product => product.id === item.id).stock -= item.qty; });
         sales.unshift(sale);
@@ -722,10 +757,11 @@
       $("#product-form").addEventListener("submit", async event => {
         event.preventDefault();
         const id = $("#edit-id").value;
-        const price = Number($("#p-price").value), stock = Number($("#p-stock").value), alert = Number($("#p-alert").value);
+        const price = Number($("#p-price").value), vat = Number($("#p-vat-rate").value), stock = Number($("#p-stock").value), alert = Number($("#p-alert").value);
         if (!Number.isFinite(price) || price <= 0 || !Number.isInteger(stock) || stock < 0 || !Number.isInteger(alert) || alert < 0) { notify("Vérifiez le prix et les quantités indiqués."); return; }
+        if (!vatRates.includes(vat)) { notify("Choisissez un taux de TVA valide."); return; }
         const previous = products.find(product => product.id === id);
-        const product = {id:id || uid(),name:$("#p-name").value.trim(),category:$("#p-category").value.trim() || "Divers",price,stock,alert,emoji:previous?.emoji || "🎁",image:photoData};
+        const product = {id:id || uid(),name:$("#p-name").value.trim(),category:$("#p-category").value.trim() || "Divers",price,vatRate:vat,stock,alert,emoji:previous?.emoji || "🎁",image:photoData};
         if (!product.name) { notify("Le nom du produit est obligatoire."); return; }
         const previousProducts = JSON.stringify(products);
         if (previous) Object.assign(previous, product); else products.push(product);
@@ -815,9 +851,39 @@
         const contact = [business.phone,business.address].filter(Boolean).map(escapeHtml);
         const itemCount = cart.reduce((count,item) => count + item.qty,0);
         const ticketNumber = `N° ${String(sales.length + 1).padStart(3,"0")}`;
-        const items = cart.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("");
-        const receipt = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="${new URL("./receipt-logo.png",window.location.href).href}" alt="Logo du FABLAB"><h1 class="receipt-title">${escapeHtml(business.name)}</h1>${business.tagline ? `<p class="receipt-tagline">${escapeHtml(business.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${ticketNumber}</strong></div><div><span>Date</span><strong>${dateText()}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total</span></div>${items}<section class="receipt-totals"><div class="receipt-total"><span>Sous-total</span><strong>${money(total)}</strong></div><div class="receipt-total final"><span>Total à payer</span><strong>${money(total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(payMethod)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
+        const breakdown = vatBreakdown(cart);
+        const totalHt = roundMoney(breakdown.reduce((sum,group) => sum + group.ht,0));
+        const totalVat = roundMoney(breakdown.reduce((sum,group) => sum + group.vat,0));
+        const vatRows = `${breakdown.map(group => `<div class="receipt-total"><span>Base HT · ${vatLabel(group.rate)}</span><strong>${money(group.ht)}</strong></div><div class="receipt-total"><span>TVA · ${vatLabel(group.rate)}</span><strong>${money(group.vat)}</strong></div>`).join("")}<div class="receipt-total"><span>Total HT</span><strong>${money(totalHt)}</strong></div><div class="receipt-total"><span>Total TVA</span><strong>${money(totalVat)}</strong></div>`;
+        const items = cart.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité TTC · TVA ${vatLabel(vatRate(item))}</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("");
+        const receipt = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="${new URL("./receipt-logo.png",window.location.href).href}" alt="Logo du FABLAB"><h1 class="receipt-title">${escapeHtml(business.name)}</h1>${business.tagline ? `<p class="receipt-tagline">${escapeHtml(business.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${ticketNumber}</strong></div><div><span>Date</span><strong>${dateText()}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total TTC</span></div>${items}<section class="receipt-totals">${vatRows}<div class="receipt-total final"><span>Total TTC</span><strong>${money(total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(payMethod)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
         printWindow.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="${escapeHtml(new URL(".",window.location.href).href)}"><title>${escapeHtml(business.name)} — ${escapeHtml(ticketNumber)}</title><style>*{box-sizing:border-box}body{margin:0;padding:18px;color:#1d2738;background:#fff;font:13px/1.5 Arial,sans-serif}.receipt-doc{max-width:390px;margin:0 auto;padding:12px 4px}.receipt-header{text-align:center;padding:8px 8px 17px;border-bottom:1px dashed #c9cdd3}.receipt-logo{display:block;width:150px;height:150px;object-fit:contain;margin:0 auto 10px}.receipt-title{margin:0;color:#13213a;font:700 20px/1.2 Georgia,serif}.receipt-tagline{margin:6px 0 0;color:#586273;font-size:12px}.receipt-contact{margin:5px 0 0;color:#6d7480;font-size:11px}.receipt-caption{margin-top:12px;color:#13213a;font-size:10px;font-weight:700;letter-spacing:.13em}.receipt-info{display:grid;gap:5px;padding:13px 0;border-bottom:1px dashed #c9cdd3;font-size:11px}.receipt-info>div,.receipt-item,.receipt-total,.receipt-payment{display:flex;justify-content:space-between;gap:12px}.receipt-info span:first-child,.receipt-item-unit{color:#6d7480}.receipt-items-title{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0 7px;color:#6d7480;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.receipt-item{align-items:flex-start;padding:9px 0;border-bottom:1px solid #eceef1}.receipt-item-main{min-width:0}.receipt-item-name{font-weight:700;overflow-wrap:anywhere}.receipt-item-unit{font-size:10px}.receipt-item-price{flex:none;text-align:right;font-weight:700;white-space:nowrap}.receipt-totals{display:grid;gap:8px;padding:12px 0;border-bottom:1px dashed #c9cdd3}.receipt-total{font-size:11px}.receipt-total.final{align-items:center;margin-top:2px;color:#13213a;font-size:15px;font-weight:700}.receipt-payment{padding:12px 0;font-size:11px}.receipt-payment strong{color:#13213a}.receipt-thanks{margin:7px 0 0;padding:13px 8px;border-top:1px dashed #c9cdd3;text-align:center;color:#586273;font-size:11px}.receipt-thanks strong{display:block;margin-bottom:4px;color:#13213a;font:700 15px Georgia,serif}@page{margin:12mm} @media print{body{padding:0}.receipt-logo{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>${receipt}</body></html>`);
+        printWindow.document.close();
+        const thermalStyle = printWindow.document.createElement("style");
+        thermalStyle.textContent = `@page{margin:0}@media print{body{padding:0}.receipt-doc{width:calc(${printerPaperWidth}mm - 4mm);max-width:none;padding:0 2mm}}`;
+        printWindow.document.head.append(thermalStyle);
+        printWindow.focus();
+        printWindow.print();
+      });
+      $("#printer-width").value = String(printerPaperWidth);
+      $("#printer-width").addEventListener("change", event => {
+        const width = Number(event.target.value);
+        if (![58,80].includes(width)) { notify("Largeur de rouleau non prise en charge."); return; }
+        try {
+          localStorage.setItem("atelier-sapin-printer-width", JSON.stringify(width));
+          printerPaperWidth = width;
+          document.documentElement.style.setProperty("--receipt-width", `${printerPaperWidth}mm`);
+          notify(`Rouleau ${printerPaperWidth} mm enregistré.`);
+        } catch (error) {
+          console.error("Impossible d’enregistrer la largeur du rouleau.", error);
+          $("#printer-width").value = String(printerPaperWidth);
+          notify("Impossible d’enregistrer le format du rouleau sur cet appareil.");
+        }
+      });
+      $("#printer-test-button").addEventListener("click", () => {
+        const printWindow = window.open("", "_blank", "width=420,height=420");
+        if (!printWindow) { notify("Autorisez les fenêtres pop-up pour imprimer le ticket de test."); return; }
+        printWindow.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Test imprimante — ${escapeHtml(business.name)}</title><style>*{box-sizing:border-box}body{margin:0;padding:3mm;color:#111;background:#fff;font:14px/1.5 Arial,sans-serif}.test-ticket{width:calc(${printerPaperWidth}mm - 6mm);margin:0 auto;text-align:center}.test-ticket h1{font-size:18px;overflow-wrap:anywhere}.test-ticket p{margin:10px 0}.test-ticket hr{border:0;border-top:1px dashed #111}@page{margin:0}@media print{body{padding:0}}</style></head><body><main class="test-ticket"><h1>${escapeHtml(business.name)}</h1><hr><p><strong>TEST IMPRIMANTE</strong></p><p>Si ce ticket est lisible, l’imprimante est prête.</p><hr><p>Rouleau : ${printerPaperWidth} mm</p><p>Ne pas remettre au client</p></main></body></html>`);
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
@@ -826,8 +892,13 @@
       $("#sales-table").addEventListener("click", event => { const button = event.target.closest("[data-receipt]"); if (button) { const sale = sales.find(entry => entry.id === button.dataset.receipt); if (sale) openReceipt(sale); } });
       $("#export-sales").addEventListener("click", () => {
         if (!sales.length) { notify("Aucune vente à exporter."); return; }
-        const rows = [["Ticket","Date","Mode de paiement","Articles","Total (€)"]];
-        sales.forEach(sale => rows.push([sale.number,new Date(sale.date).toLocaleString("fr-FR"),sale.method,sale.items.map(item=>`${item.name} x${item.qty}`).join(" | "),sale.total.toFixed(2)]));
+        const rows = [["Ticket","Date","Mode de paiement","Articles","Total TTC (€)","Total HT (€)","TVA collectée (€)"]];
+        sales.forEach(sale => {
+          const breakdown = sale.vatEnabled ? vatBreakdown(sale.items) : [];
+          const totalHt = roundMoney(breakdown.reduce((sum,group) => sum + group.ht,0));
+          const totalVat = roundMoney(breakdown.reduce((sum,group) => sum + group.vat,0));
+          rows.push([sale.number,new Date(sale.date).toLocaleString("fr-FR"),sale.method,sale.items.map(item=>`${item.name} x${item.qty}`).join(" | "),sale.total.toFixed(2),sale.vatEnabled ? totalHt.toFixed(2) : "",sale.vatEnabled ? totalVat.toFixed(2) : ""]);
+        });
         const csv = "\uFEFF" + rows.map(row => row.map(value => `"${String(value).replace(/"/g,'""')}"`).join(";")).join("\r\n");
         const storeSlug = business.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "boutique";
         const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})); link.download = `ventes-${storeSlug}-${new Date().toISOString().slice(0,10)}.csv`; link.click(); URL.revokeObjectURL(link.href);

@@ -47,3 +47,29 @@ locales existantes dans le cloud. Les appareils suivants chargent ces données.
 La synchronisation s’actualise automatiquement environ toutes les 15 secondes.
 En cas de modification simultanée sur deux appareils, la caisse recharge la
 dernière version enregistrée et demande de vérifier avant de recommencer.
+
+## 5. Imprimer sur une imprimante thermique USB
+
+Branchez l’imprimante sur l’ordinateur et installez son pilote Windows (fourni
+par le fabricant ou via Windows Update). Dans **Ma boutique**, choisissez un
+rouleau de 58 ou 80 mm, puis cliquez sur **Imprimer un ticket de test**.
+Dans la fenêtre d’impression du navigateur, sélectionnez l’imprimante USB et
+choisissez le même format de papier dans les préférences du pilote.
+
+L’impression passe par le navigateur et le pilote du système : elle ne dépend
+pas de la marque, tant que Windows reconnaît l’imprimante. Une application web
+ne peut pas communiquer directement avec tous les périphériques USB de façon
+universelle. Les imprimantes qui exigent un logiciel ou un pilote spécifique
+doivent donc être configurées dans Windows avant l’impression.
+
+## 6. Gérer la TVA
+
+Les prix de vente saisis restent **TTC** : le montant facturé au client ne
+change pas. Dans le formulaire de chaque produit, choisissez son taux de TVA
+(20 % par défaut, ou 10 %, 5,5 %, 2,1 % ou 0 %). Vérifiez le taux applicable à
+chaque produit selon votre situation.
+
+Les nouveaux tickets affichent les bases HT et la TVA par taux, ainsi que les
+totaux HT, TVA et TTC. L’historique et l’export CSV indiquent aussi la TVA
+collectée. Les tickets enregistrés avant l’activation de cette fonction ne
+sont pas recalculés rétroactivement.
