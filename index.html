@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#176b4a">
-  <meta name="apple-mobile-web-app-title" content="Systeme caisse">
+  <meta name="theme-color" content="#13213a">
+  <meta name="apple-mobile-web-app-title" content="Caisse FABLAB">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./app-icon.svg" type="image/svg+xml">
-  <title>Systeme caisse</title>
+  <link rel="icon" href="./app-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="./app-icon.png">
+  <title>Caisse FABLAB</title>
   <style>
     :root{--green:#153b31;--green2:#214d3f;--cream:#f7f5ef;--paper:#fffefa;--ink:#20352d;--muted:#75817a;--line:#e9e9df;--red:#b8453d;--gold:#c9994e;--shadow:0 12px 36px #193c2910}
     *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:"Segoe UI",Arial,sans-serif;font-size:14px}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #c9994e66;outline-offset:2px}
@@ -49,12 +50,76 @@
     .sales-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
     .sales-actions .secondary,.sales-actions .danger{padding:7px 9px;font-size:11px}
     @media(max-width:600px){.stock-adjust{gap:4px}.restock-button{padding:6px}.sales-actions{align-items:flex-start;flex-direction:column}}
+    :root{--green:#13213a;--green2:#293b59;--cream:#f3f4f6;--paper:#fff;--ink:#1d2738;--muted:#6d7480;--line:#e0e3e8;--gold:#848b96;--shadow:0 12px 32px #13213a18}
+    body{background:linear-gradient(135deg,#fff 0%,#f1f2f4 52%,#f8f8f9 100%);background-attachment:fixed}
+    .sidebar{background:linear-gradient(165deg,#172944 0%,#13213a 55%,#0e192c 100%)}
+    .primary{background:linear-gradient(135deg,#243957,#13213a);box-shadow:0 4px 12px #13213a30}
+    .primary:hover{background:linear-gradient(135deg,#304766,#1a2c46);box-shadow:0 6px 16px #13213a38}
+    .nav button.active{background:linear-gradient(110deg,#ffffff26,#ffffff0d);box-shadow:inset 3px 0 #aeb8c6}
+    .chip.active{background:linear-gradient(135deg,#243957,#13213a);border-color:#13213a}
+    .product-photo{background:linear-gradient(145deg,#f0f1f3,#e3e5e9)}
+    .product-card:hover{border-color:#aab2bd;box-shadow:0 12px 24px #13213a1c}
+    .stat{background:linear-gradient(145deg,#fff 30%,#f2f3f5 100%);border-color:#e0e3e8}
+    .login-screen{background:radial-gradient(ellipse at 50% 25%,#e5e8ed 0,#f3f4f6 65%)}
+    .login-mark{background:#fff}
+    .restock-button{border-color:#d5d9df;background:linear-gradient(135deg,#f5f6f7,#e9ebee);color:#13213a}
+    .restock-button:hover{border-color:#aeb6c1;background:linear-gradient(135deg,#eceef1,#dfe2e7)}
+    .brand-logo{border-radius:inherit}
+    .open-indicator{background:#aeb8c6}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#68778d66}
+    .search:focus,.category-filter:focus,.settings-fields .field input:focus,.pin-fields .field input:focus{border-color:#8793a4;box-shadow:0 0 0 3px #13213a10}
+    .ticket-head{padding-bottom:17px}
+    .ticket-brand{display:flex;align-items:center;gap:11px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .ticket-logo{width:54px;height:54px;flex:none;object-fit:contain;border:1px solid var(--line);border-radius:11px;background:#fff}
+    .ticket-brand-copy{min-width:0}
+    .ticket-brand-copy strong{display:block;color:var(--green);font:700 13px Georgia,serif}
+    .ticket-brand-copy span{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.45}
+    .ticket-details{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .ticket-details h2{font:700 16px Georgia,serif}
+    .ticket-meta{line-height:1.6}
+    .ticket-items{min-height:0;padding-top:5px;padding-bottom:10px}
+    .ticket-items.is-empty{min-height:180px}
+    .empty-ticket{display:grid;justify-items:center;align-content:center;gap:7px;min-height:155px;padding:20px 14px}
+    .empty-ticket span{display:grid;place-items:center;width:45px;height:45px;margin:0 0 4px;border-radius:15px;background:#eef0f3;color:var(--green);font-size:22px}
+    .empty-ticket strong{color:var(--ink);font-size:12px}
+    .empty-ticket small{max-width:205px;color:var(--muted);font-size:10px;line-height:1.55}
+    .ticket-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
+    .ticket-summary>div{padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#f8f9fa}
+    .ticket-summary span,.ticket-summary strong{display:block}
+    .ticket-summary span{font-size:9px;color:var(--muted)}
+    .ticket-summary strong{margin-top:4px;color:var(--green);font-size:12px}
+    .ticket .total{padding:13px 0;border-top:1px dashed var(--line)}
+    .ticket .small-note{line-height:1.55}
+    .receipt-doc{max-width:390px;margin:0 auto;padding:12px 4px;color:#1d2738;font:13px/1.5 Arial,sans-serif}
+    .receipt-header{text-align:center;padding:8px 8px 17px;border-bottom:1px dashed #c9cdd3}
+    .receipt-logo{display:block;width:150px;height:150px;object-fit:contain;margin:0 auto 10px}
+    .receipt-title{margin:0;color:#13213a;font:700 20px/1.2 Georgia,serif}
+    .receipt-tagline{margin:6px 0 0;color:#586273;font-size:12px}
+    .receipt-contact{margin:5px 0 0;color:#6d7480;font-size:11px}
+    .receipt-caption{margin-top:12px;color:#13213a;font-size:10px;font-weight:700;letter-spacing:.13em}
+    .receipt-info{display:grid;gap:5px;padding:13px 0;border-bottom:1px dashed #c9cdd3;font-size:11px}
+    .receipt-info>div,.receipt-item,.receipt-total,.receipt-payment{display:flex;justify-content:space-between;gap:12px}
+    .receipt-info span:first-child,.receipt-item-unit{color:#6d7480}
+    .receipt-items-title{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0 7px;color:#6d7480;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .receipt-item{align-items:flex-start;padding:9px 0;border-bottom:1px solid #eceef1}
+    .receipt-item-main{min-width:0}
+    .receipt-item-name{font-weight:700;overflow-wrap:anywhere}
+    .receipt-item-unit{font-size:10px}
+    .receipt-item-price{flex:none;text-align:right;font-weight:700;white-space:nowrap}
+    .receipt-totals{display:grid;gap:8px;padding:12px 0;border-bottom:1px dashed #c9cdd3}
+    .receipt-total{font-size:11px}
+    .receipt-total.final{align-items:center;margin-top:2px;color:#13213a;font-size:15px;font-weight:700}
+    .receipt-payment{padding:12px 0;font-size:11px}
+    .receipt-payment strong{color:#13213a}
+    .receipt-thanks{margin:7px 0 0;padding:13px 8px;border-top:1px dashed #c9cdd3;text-align:center;color:#586273;font-size:11px}
+    .receipt-thanks strong{display:block;margin-bottom:4px;color:#13213a;font:700 15px Georgia,serif}
+    @media print{.print-area{position:absolute;inset:0;width:100%;padding:20px;background:#fff}.receipt-doc{max-width:390px;padding:0}.receipt-logo{width:135px;height:135px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
   </style>
 </head>
 <body>
   <section class="login-screen" id="login-screen">
     <form class="login-card" id="login-form">
-      <div class="login-brand"><div class="login-mark" id="login-mark">🎄</div><h1 id="login-store-name">Atelier Sapin</h1><p id="login-tagline">La magie des fêtes</p></div>
+      <div class="login-brand"><div class="login-mark" id="login-mark">🎄</div><h1 id="login-store-name">Caisse FABLAB</h1><p id="login-tagline">Collège Romain Blache · Saint-Cyr-sur-Mer</p></div>
       <div class="login-status local" id="login-status">Mode local : pour partager stock et ventes entre appareils, configurez le projet Supabase.</div>
       <div class="field"><label for="login-pin">Code PIN</label><input id="login-pin" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="current-password" maxlength="8" required placeholder="••••"></div>
       <div class="login-error" id="login-error" role="status"></div>
@@ -63,7 +128,7 @@
   </section>
   <div class="app hidden" id="cashier-app">
     <aside class="sidebar">
-      <div class="brand"><div class="brand-mark" id="sidebar-mark">🎄</div><div><h1 id="store-name">Atelier Sapin</h1><p id="store-tagline">La magie des fêtes</p></div></div>
+      <div class="brand"><div class="brand-mark" id="sidebar-mark">🎄</div><div><h1 id="store-name">Caisse FABLAB</h1><p id="store-tagline">Collège Romain Blache · Saint-Cyr-sur-Mer</p></div></div>
       <div class="nav-label">Espace de vente</div>
       <nav class="nav" aria-label="Navigation principale">
         <button class="active" data-view="caisse" title="Caisse"><span class="icon">▦</span><span class="nav-text">Caisse</span></button>
@@ -84,9 +149,9 @@
             <div class="product-grid" id="product-grid"></div>
           </div>
           <aside class="ticket" aria-label="Ticket en cours">
-            <div class="ticket-head"><div class="ticket-heading"><h2>Ticket en cours</h2><span class="ticket-label" id="ticket-number">N° 001</span></div><div class="ticket-meta" id="ticket-date"></div></div>
+            <div class="ticket-head"><div class="ticket-brand"><img class="ticket-logo" src="./receipt-logo.png" alt="Logo du FABLAB"><div class="ticket-brand-copy"><strong>Collège Romain Blache</strong><span>FABLAB · Saint-Cyr-sur-Mer</span></div></div><div class="ticket-details"><h2>Ticket en cours</h2><span class="ticket-label" id="ticket-number">N° 001</span></div><div class="ticket-meta" id="ticket-date"></div></div>
             <div class="ticket-items" id="ticket-items"></div>
-            <div class="ticket-bottom"><div class="subtotal"><span>Sous-total</span><span id="subtotal">0,00 €</span></div><div class="total"><span>Total à payer</span><strong id="total">0,00 €</strong></div><div class="ticket-actions"><button class="primary" id="checkout-button">Encaisser</button><button class="secondary" id="print-button">⎙ Imprimer</button><button class="secondary clear-button" id="clear-ticket">Vider le ticket</button></div><div class="small-note">Le stock est mis à jour après encaissement</div></div>
+            <div class="ticket-bottom"><div class="ticket-summary"><div><span>Articles</span><strong id="ticket-count">0 article</strong></div><div><span>Paiement</span><strong id="ticket-payment">Espèces</strong></div></div><div class="subtotal"><span>Sous-total</span><span id="subtotal">0,00 €</span></div><div class="total"><span>Total à payer</span><strong id="total">0,00 €</strong></div><div class="ticket-actions"><button class="primary" id="checkout-button">Encaisser</button><button class="secondary" id="print-button">⎙ Imprimer</button><button class="secondary clear-button" id="clear-ticket">Vider le ticket</button></div><div class="small-note">Le stock est mis à jour après encaissement</div></div>
           </aside>
         </div>
       </section>
@@ -174,7 +239,7 @@
         try { const data = localStorage.getItem(key); return data ? JSON.parse(data) : fallback; }
         catch (error) { console.error(`Impossible de lire ${key} depuis le stockage local.`, error); return fallback; }
       };
-      const defaultBusiness = {name:"Atelier Sapin",tagline:"La magie des fêtes",phone:"",address:"",logo:"",icon:"🎄"};
+      const defaultBusiness = {name:"Caisse FABLAB",tagline:"Collège Romain Blache · Saint-Cyr-sur-Mer",phone:"",address:"",logo:"",icon:"🎄"};
       const savedBusiness = load("atelier-sapin-business", {});
       let business = {...defaultBusiness,...(savedBusiness && typeof savedBusiness === "object" && !Array.isArray(savedBusiness) ? savedBusiness : {})};
       let selectedLogo = business.logo;
@@ -265,7 +330,7 @@
       };
       const logoMarkup = (logo, icon) => {
         const safeLogo = safeImageData(logo);
-        return safeLogo ? `<img class="brand-logo" src="${safeLogo}" alt="">` : escapeHtml(icon || "🎄");
+        return safeLogo ? `<img class="brand-logo" src="${safeLogo}" alt="">` : icon === "🎄" || !icon ? `<img class="brand-logo" src="./app-icon.png" alt="">` : escapeHtml(icon);
       };
       const renderLogoTargets = (logo, icon) => {
         const markup = logoMarkup(logo,icon);
@@ -279,7 +344,7 @@
         $("#store-name").textContent = business.name;
         $("#store-tagline").textContent = business.tagline || " ";
         $("#store-eyebrow").textContent = business.tagline || business.name;
-        document.title = "Systeme caisse";
+        document.title = "Caisse FABLAB";
         $("#login-store-name").textContent = business.name;
         $("#login-tagline").textContent = business.tagline || "Bienvenue dans notre boutique";
         $("#business-name").value = business.name;
@@ -309,10 +374,13 @@
       const renderCart = () => {
         const count = cart.reduce((total, item) => total + item.qty, 0);
         const amount = cart.reduce((total, item) => total + item.price * item.qty, 0);
-        $("#ticket-items").innerHTML = cart.length ? cart.map(item => `<div class="ticket-line"><div><div class="line-title">${escapeHtml(item.name)}</div><div class="line-sub">${money(item.price)} / unité</div><div class="qty-control"><button data-qty="${item.id}" data-change="-1" aria-label="Retirer une unité">−</button><span>${item.qty}</span><button data-qty="${item.id}" data-change="1" aria-label="Ajouter une unité">+</button></div></div><div class="line-right">${money(item.price * item.qty)}<button class="line-remove" data-remove="${item.id}">Retirer</button></div></div>`).join("") : `<div class="empty-ticket"><span>🧾</span>Votre ticket est vide<br>Ajoutez des articles pour commencer.</div>`;
+        $("#ticket-items").classList.toggle("is-empty",!cart.length);
+        $("#ticket-items").innerHTML = cart.length ? cart.map(item => `<div class="ticket-line"><div><div class="line-title">${escapeHtml(item.name)}</div><div class="line-sub">${money(item.price)} / unité</div><div class="qty-control"><button data-qty="${item.id}" data-change="-1" aria-label="Retirer une unité">−</button><span>${item.qty}</span><button data-qty="${item.id}" data-change="1" aria-label="Ajouter une unité">+</button></div></div><div class="line-right">${money(item.price * item.qty)}<button class="line-remove" data-remove="${item.id}">Retirer</button></div></div>`).join("") : `<div class="empty-ticket"><span>🧾</span><strong>Votre ticket est prêt</strong><small>Choisissez un article dans le catalogue pour commencer la vente. Les quantités et le total s’afficheront ici.</small></div>`;
         $("#subtotal").textContent = money(amount); $("#total").textContent = money(amount);
         $("#ticket-number").textContent = `N° ${String(sales.length + 1).padStart(3,"0")}`;
         $("#ticket-date").textContent = `${dateText()} · ${count} article${count > 1 ? "s" : ""}`;
+        $("#ticket-count").textContent = `${count} article${count > 1 ? "s" : ""}`;
+        $("#ticket-payment").textContent = payMethod;
         $("#checkout-button").disabled = !cart.length;
         $("#print-button").disabled = !cart.length;
       };
@@ -361,10 +429,9 @@
       const updatePhotoPreview = () => { $("#photo-preview").innerHTML = photoData ? `<img src="${photoData}" alt="Aperçu de la photo">` : "🎁"; };
       const openReceipt = (sale) => {
         const receiptBusiness = sale.business || business;
-        const contact = [receiptBusiness.phone,receiptBusiness.address].filter(Boolean).map(escapeHtml).join(" · ");
-        const receiptLogo = safeImageData(receiptBusiness.logo);
-        const receiptIcon = receiptLogo ? `<img src="${receiptLogo}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:12px">` : escapeHtml(receiptBusiness.icon || "🎄");
-        $("#receipt-content").innerHTML = `<div style="text-align:center;font-family:Arial,sans-serif;color:#20352d"><div style="font-size:30px">${receiptIcon}</div><h2 style="font-family:Georgia,serif;color:#153b31;margin:6px 0">${escapeHtml(receiptBusiness.name)}</h2><div style="font-size:12px;color:#75817a">${escapeHtml(receiptBusiness.tagline || "")}</div>${contact ? `<div style="font-size:11px;color:#75817a;margin-top:5px">${contact}</div>` : ""}<hr style="border:0;border-top:1px dashed #ddd;margin:17px 0"><div style="text-align:left;font-size:12px;color:#75817a">${escapeHtml(sale.number)} · ${dateText(new Date(sale.date))}</div>${sale.items.map(item => `<div style="display:flex;justify-content:space-between;text-align:left;margin:12px 0;font-size:13px"><span>${escapeHtml(item.name)} × ${item.qty}</span><strong>${money(item.price * item.qty)}</strong></div>`).join("")}<hr style="border:0;border-top:1px dashed #ddd;margin:15px 0"><div style="display:flex;justify-content:space-between;font-size:16px"><strong>Total</strong><strong>${money(sale.total)}</strong></div><p style="font-size:11px;color:#75817a;margin-top:16px">Paiement : ${escapeHtml(sale.method)}<br>Merci de votre visite et à bientôt !</p></div>`;
+        const contact = [receiptBusiness.phone,receiptBusiness.address].filter(Boolean).map(escapeHtml);
+        const itemCount = sale.items.reduce((count,item) => count + item.qty,0);
+        $("#receipt-content").innerHTML = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="./receipt-logo.png" alt="Logo du FABLAB"><h2 class="receipt-title">${escapeHtml(receiptBusiness.name)}</h2>${receiptBusiness.tagline ? `<p class="receipt-tagline">${escapeHtml(receiptBusiness.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${escapeHtml(sale.number)}</strong></div><div><span>Date</span><strong>${dateText(new Date(sale.date))}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total</span></div>${sale.items.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("")}<section class="receipt-totals"><div class="receipt-total"><span>Sous-total</span><strong>${money(sale.total)}</strong></div><div class="receipt-total final"><span>Total à payer</span><strong>${money(sale.total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(sale.method)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
         $("#sale-modal").classList.add("open");
       };
       const completeSale = async () => {
@@ -504,11 +571,11 @@
         unlockCashier($("#login-pin").value);
       });
       $("#login-status").textContent = cloudEnabled
-        ? "Le serveur Supabase n’est pas encore déployé : connexion locale disponible sur cet appareil, sans partage entre appareils."
+        ? "Serveur Supabase disponible. Connectez-vous pour vérifier la synchronisation de la caisse."
         : "Mode local : stock et ventes ne sont pas synchronisés. Configurez Supabase pour partager la caisse.";
-      $("#login-status").className = "login-status local";
+      $("#login-status").className = cloudEnabled ? "login-status cloud" : "login-status local";
       $("#pin-mode-note").textContent = cloudEnabled
-        ? "Le PIN local permet une connexion de secours sur cet appareil en attendant le déploiement du serveur."
+        ? "Après connexion, la caisse vérifiera l’accès aux données partagées."
         : "Mode local : le code PIN est enregistré sur cet appareil uniquement.";
       $("#sidebar-toggle").addEventListener("click", () => {
         const collapsed = $("#cashier-app").classList.toggle("sidebar-collapsed");
@@ -737,15 +804,16 @@
       document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => $(`#${button.dataset.close}`).classList.remove("open")));
       document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => { if (event.target === backdrop) backdrop.classList.remove("open"); }));
       $("#print-button").addEventListener("click", () => {
-        const items = cart.map(item => `<div style="display:flex;justify-content:space-between;margin:9px 0"><span>${escapeHtml(item.name)} × ${item.qty}</span><span>${money(item.price * item.qty)}</span></div>`).join("");
+        if (!cart.length) { notify("Ajoutez au moins un article avant d’imprimer le ticket."); return; }
         const total = cart.reduce((sum,item) => sum + item.price * item.qty,0);
         const printWindow = window.open("", "_blank", "width=420,height=650");
         if (!printWindow) { notify("Autorisez les fenêtres pop-up pour imprimer."); return; }
-        const contact = [business.phone,business.address].filter(Boolean).map(escapeHtml).join(" · ");
-        const printedLogo = safeImageData(business.logo);
-        const printedIcon = printedLogo ? `<img src="${printedLogo}" style="width:38px;height:38px;object-fit:cover;border-radius:10px;vertical-align:middle">` : escapeHtml(business.icon || "🎄");
-        printWindow.document.write(`<html lang="fr"><head><title>${escapeHtml(business.name)} — Ticket</title><style>body{font:14px Arial,sans-serif;max-width:340px;margin:28px auto;color:#20352d}h1{text-align:center;font-size:21px}p{text-align:center;color:#75817a;font-size:12px}hr{border:0;border-top:1px dashed #aaa;margin:18px 0}.total{display:flex;justify-content:space-between;font-weight:bold;font-size:17px}</style></head><body><h1>${printedIcon} ${escapeHtml(business.name)}</h1><p>${escapeHtml(business.tagline)}<br>${contact}<br>${dateText()} · Ticket en cours</p><hr>${items}<hr><div class="total"><span>Total</span><span>${money(total)}</span></div><p>Merci de votre visite et à bientôt !</p></body></html>`);
-        printWindow.document.write(`<html lang="fr"><head><title>${escapeHtml(business.name)} — Ticket</title><style>body{font:14px Arial,sans-serif;max-width:340px;margin:28px auto;color:#20352d}h1{text-align:center;font-size:21px}p{text-align:center;color:#75817a;font-size:12px}hr{border:0;border-top:1px dashed #aaa;margin:18px 0}.total{display:flex;justify-content:space-between;font-weight:bold;font-size:17px}</style></head><body><h1>${printedIcon} ${escapeHtml(business.name)}</h1><p>${escapeHtml(business.tagline)}<br>${contact}<br>${dateText()} · Ticket en cours</p><hr>${items}<hr><div class="total"><span>Total</span><span>${money(total)}</span></div><p>Merci de votre visite et à bientôt !</p></body></html>`);
+        const contact = [business.phone,business.address].filter(Boolean).map(escapeHtml);
+        const itemCount = cart.reduce((count,item) => count + item.qty,0);
+        const ticketNumber = `N° ${String(sales.length + 1).padStart(3,"0")}`;
+        const items = cart.map(item => `<div class="receipt-item"><div class="receipt-item-main"><div class="receipt-item-name">${escapeHtml(item.name)} × ${item.qty}</div><div class="receipt-item-unit">${money(item.price)} / unité</div></div><strong class="receipt-item-price">${money(item.price * item.qty)}</strong></div>`).join("");
+        const receipt = `<article class="receipt-doc"><header class="receipt-header"><img class="receipt-logo" src="${new URL("./receipt-logo.png",window.location.href).href}" alt="Logo du FABLAB"><h1 class="receipt-title">${escapeHtml(business.name)}</h1>${business.tagline ? `<p class="receipt-tagline">${escapeHtml(business.tagline)}</p>` : ""}${contact.map(value => `<p class="receipt-contact">${value}</p>`).join("")}<div class="receipt-caption">TICKET DE CAISSE</div></header><section class="receipt-info"><div><span>Numéro</span><strong>${ticketNumber}</strong></div><div><span>Date</span><strong>${dateText()}</strong></div><div><span>Articles</span><strong>${itemCount} article${itemCount > 1 ? "s" : ""}</strong></div></section><div class="receipt-items-title"><span>Désignation · quantité · prix unitaire</span><span>Total</span></div>${items}<section class="receipt-totals"><div class="receipt-total"><span>Sous-total</span><strong>${money(total)}</strong></div><div class="receipt-total final"><span>Total à payer</span><strong>${money(total)}</strong></div></section><div class="receipt-payment"><span>Mode de paiement</span><strong>${escapeHtml(payMethod)}</strong></div><footer class="receipt-thanks"><strong>Merci pour votre visite !</strong>Votre achat soutient le FABLAB du Collège Romain Blache.<br>À bientôt à Saint-Cyr-sur-Mer !</footer></article>`;
+        printWindow.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="${escapeHtml(new URL(".",window.location.href).href)}"><title>${escapeHtml(business.name)} — ${escapeHtml(ticketNumber)}</title><style>*{box-sizing:border-box}body{margin:0;padding:18px;color:#1d2738;background:#fff;font:13px/1.5 Arial,sans-serif}.receipt-doc{max-width:390px;margin:0 auto;padding:12px 4px}.receipt-header{text-align:center;padding:8px 8px 17px;border-bottom:1px dashed #c9cdd3}.receipt-logo{display:block;width:150px;height:150px;object-fit:contain;margin:0 auto 10px}.receipt-title{margin:0;color:#13213a;font:700 20px/1.2 Georgia,serif}.receipt-tagline{margin:6px 0 0;color:#586273;font-size:12px}.receipt-contact{margin:5px 0 0;color:#6d7480;font-size:11px}.receipt-caption{margin-top:12px;color:#13213a;font-size:10px;font-weight:700;letter-spacing:.13em}.receipt-info{display:grid;gap:5px;padding:13px 0;border-bottom:1px dashed #c9cdd3;font-size:11px}.receipt-info>div,.receipt-item,.receipt-total,.receipt-payment{display:flex;justify-content:space-between;gap:12px}.receipt-info span:first-child,.receipt-item-unit{color:#6d7480}.receipt-items-title{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0 7px;color:#6d7480;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.receipt-item{align-items:flex-start;padding:9px 0;border-bottom:1px solid #eceef1}.receipt-item-main{min-width:0}.receipt-item-name{font-weight:700;overflow-wrap:anywhere}.receipt-item-unit{font-size:10px}.receipt-item-price{flex:none;text-align:right;font-weight:700;white-space:nowrap}.receipt-totals{display:grid;gap:8px;padding:12px 0;border-bottom:1px dashed #c9cdd3}.receipt-total{font-size:11px}.receipt-total.final{align-items:center;margin-top:2px;color:#13213a;font-size:15px;font-weight:700}.receipt-payment{padding:12px 0;font-size:11px}.receipt-payment strong{color:#13213a}.receipt-thanks{margin:7px 0 0;padding:13px 8px;border-top:1px dashed #c9cdd3;text-align:center;color:#586273;font-size:11px}.receipt-thanks strong{display:block;margin-bottom:4px;color:#13213a;font:700 15px Georgia,serif}@page{margin:12mm} @media print{body{padding:0}.receipt-logo{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>${receipt}</body></html>`);
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();

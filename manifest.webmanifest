@@ -1,19 +1,19 @@
 {
-  "name": "Systeme caisse",
-  "short_name": "Systeme caisse",
-  "description": "Caisse et gestion de stock de votre boutique",
+  "name": "Caisse FABLAB",
+  "short_name": "FABLAB Caisse",
+  "description": "Caisse du FABLAB du Collège Romain Blache à Saint-Cyr-sur-Mer",
   "lang": "fr-FR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f9f5",
-  "theme_color": "#176b4a",
+  "background_color": "#f3f4f6",
+  "theme_color": "#13213a",
   "icons": [
     {
-      "src": "./app-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "./app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
